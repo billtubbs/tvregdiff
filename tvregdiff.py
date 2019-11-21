@@ -184,24 +184,25 @@ def TVRegDiff(data, itern, alph, u0=None, scale='small', ep=1e-6, dx=None,
         # Construct differentiation matrix.
         c = np.ones(n + 1) / dx
         D = sparse.spdiags([-c, c], [0, 1], n, n + 1)
-
         DT = D.transpose()
 
         # Construct antidifferentiation operator and its adjoint.
-        def A(x): return (np.cumsum(x) - 0.5 * (x + x[0]))[1:] * dx
+        def A(x):
+            return (np.cumsum(x) - 0.5 * (x + x[0]))[1:] * dx
 
-        def AT(w): return (sum(w) * np.ones(n + 1) -
-                           np.transpose(np.concatenate(([sum(w) / 2.0],
-                                                        np.cumsum(w) -
-                                                        w / 2.0)))) * dx
+        def AT(w):
+            return (
+                sum(w) * np.ones(n + 1) -
+                np.transpose(np.concatenate(([sum(w) / 2.0],
+                                            np.cumsum(w) - w / 2.0)))
+            ) * dx
 
         # Default initialization is naive derivative
-
         if u0 is None:
             u0 = np.concatenate(([0], np.diff(data), [0]))
 
         u = u0
-        # Since Au( 0 ) = 0, we need to adjust.
+        # Since Au(0) = 0, we need to adjust.
         ofst = data[0]
         # Precompute.
         ATb = AT(ofst - data)        # input: size n
@@ -304,7 +305,7 @@ def TVRegDiff(data, itern, alph, u0=None, scale='small', ep=1e-6, dx=None,
             else:
                 [s, info_i] = sparse.linalg.cg(
                     linop, -g, x0=None, atol=tol, maxiter=maxit, callback=None,
-                    M = np.dot(R.transpose(), R))
+                    M=np.dot(R.transpose(), R))
             # Update current solution
             u = u + s
             # Display plot
