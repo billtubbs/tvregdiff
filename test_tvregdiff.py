@@ -1,7 +1,7 @@
 """
 Unit tests for tvregdiff.py which test if this Python
 implementation of TVREGDiff replicates the MATLAB demo
-scipt outputs from Rick Chartrand's webpage:
+script outputs from Rick Chartrand's webpage:
 https://sites.google.com/site/dnartrahckcir/home/tvdiff-code
 """
 
