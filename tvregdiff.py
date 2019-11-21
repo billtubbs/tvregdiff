@@ -237,8 +237,7 @@ def TVRegDiff(data, itern, alph, u0=None, scale='small', ep=1e-6, dx=None,
                     logging.warning("WARNING - illegal input or breakdown")
             else:
                 [s, info_i] = sparse.linalg.cg(
-                    linop, g, x0=None, tol=tol, maxiter=maxit, callback=None,
-                    M=P, atol='legacy')
+                    linop, g, x0=None, atol=tol, maxiter=maxit, callback=None, M=P)
             # Update solution.
             u = u - s
             # Display plot.
@@ -261,7 +260,7 @@ def TVRegDiff(data, itern, alph, u0=None, scale='small', ep=1e-6, dx=None,
         mask[-1, -1] = 0.0
         D = sparse.dia_matrix(D.multiply(mask))
         DT = D.transpose()
-        # Since Au( 0 ) = 0, we need to adjust.
+        # Since Au(0) == 0, we need to adjust.
         data = data - data[0]
         # Default initialization is naive derivative.
         if u0 is None:
@@ -293,8 +292,8 @@ def TVRegDiff(data, itern, alph, u0=None, scale='small', ep=1e-6, dx=None,
 
             if diagflag:
                 [s, info_i] = sparse.linalg.cg(
-                    linop, -g, x0=None, tol=tol, maxiter=maxit, callback=None,
-                    M=np.dot(R.transpose(), R), atol='legacy')
+                    linop, -g, x0=None, atol=tol, maxiter=maxit, callback=None,
+                    M=np.dot(R.transpose(), R))
                 log_iteration(ii, s[0], u, g)
                 if (info_i > 0):
                     logging.warning(
@@ -304,8 +303,8 @@ def TVRegDiff(data, itern, alph, u0=None, scale='small', ep=1e-6, dx=None,
 
             else:
                 [s, info_i] = sparse.linalg.cg(
-                    linop, -g, x0=None, tol=tol, maxiter=maxit, callback=None,
-                    M = np.dot(R.transpose(), R), atol='legacy')
+                    linop, -g, x0=None, atol=tol, maxiter=maxit, callback=None,
+                    M = np.dot(R.transpose(), R))
             # Update current solution
             u = u + s
             # Display plot
